@@ -6,7 +6,6 @@ const fs = require('fs');
 
 const bar = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
 
-
 async function scraper(pathNumber, name, filePath, count) {
     const linksList = [];
     bar.start(count, 0);
