@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "start": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -15,7 +16,9 @@
     "cheerio": "^1.0.0-rc.11",
     "cli-progress": "^3.11.1",
     "dotenv": "^16.0.1",
-    "telegraf": "^4.8.5"
+    "needle": "^3.1.0",
+    "telegraf": "^4.8.5",
+    "timers-promises": "^1.0.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.16"

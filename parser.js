@@ -4,46 +4,38 @@ const axios = require('axios').default;
 const cheerio = require('cheerio');
 const fs = require('fs');
 
-const multibar = new cliProgress.MultiBar({
-    clearOnComplete: false,
-    hideCursor: true
+const bar = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
 
-}, cliProgress.Presets.shades_classic);
 
 async function scraper(pathNumber, name, filePath, count) {
     const linksList = [];
-    const processBar = multibar.create(count, 0);
-    console.log(`\nProgress ${filePath}`);
+    bar.start(count, 0);
     for (let i = 1; i <= count; i++) {
+        console.log(`\nProgress, ${name}`);
         await axios.get(`https://www.russianfood.com/recipes/bytype/?fid=${pathNumber}&page=${i}#rcp_list`)
         .then(function (response) {
             const $ = cheerio.load(response.data);
-            $('div[class="recipe_list_new"]').find('div > div > a').each(function (index, element) {
+            $('div[class="recipe_list_new"]').find('.foto > a').each(function (index, element) {
                 const link = ($(element).attr('href'));
-                if (!link.match(/sort/)) {
-                    linksList.push(link);
-                }
+                linksList.push('https://www.russianfood.com' + link);
+                bar.update(i);
             });
         })
+
         .catch(function (error) {
             console.log(error);
         })
-        .then(function () {
-            processBar.update(i)
-        });
     }
-    const filterList = linksList.filter((i, pos) => linksList.indexOf(i) === pos)
-        .map((i) => 'https://www.russianfood.com' + i)
 
     await checkFileExists(filePath)
 
-    writeLinks(filePath, JSON.stringify(filterList), name);
-    processBar.stop()
+    await writeLinks(filePath, JSON.stringify(linksList), name);
 }
 
 async function writeLinks(filename, content, name) {
     try {
-      await fsPromises.appendFile(filename, content);
+      await fsPromises.writeFile(filename, content);
+      bar.stop();
     } catch (err) {
       console.error(err);
     }
@@ -58,5 +50,5 @@ async function checkFileExists(file) {
     }
   }
 
-scraper(3, 'second', 'second.txt', 30);
-scraper(2, 'first', 'first.txt', 30);
+
+Promise.all([scraper(3, 'second', 'second.txt', 30), scraper(2, 'first', 'first.txt', 30)]);
