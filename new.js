@@ -7,27 +7,23 @@ import axios from 'axios';
 import * as cheerio from 'cheerio';
 
 async function scraper() {
-    // breakfast = 130
-    // osnovnye-blyuda
     const linksList = [];
-    for (let i = 1; i <= 5; i++) {
+    for (let i = 100; i <= 500; i++) {
         console.log(i);
-        await axios.get(`https://eda.ru/recepty/zavtraki?page=${i}`)
+        await axios.get(`https://eda.ru/recepty/supy?page=${i}`)
         .then(function (response) {
             const $ = cheerio.load(response.data);
             $('.emotion-7ote3x > div').find('.emotion-m0u77r').each((index, e) => {
                 const data = $(e).find('.emotion-m0u77r > .emotion-1f6ych6 > .emotion-4o0liq > a');
-                const link = 'https://eda.ru/' + data.attr('href');
+                const link = 'https://eda.ru' + data.attr('href');
                 const img = $(data).find('.emotion-0 > .emotion-mrkurn > img').attr('src');
-                if (img.match(/src/g)) {
+                if (img && !img.match(/data:image/g)) {
                     linksList.push({
                         link,
                         img
                     })
                 }
             });
-
-            // console.log(linksList);
             
         })
 
@@ -36,9 +32,12 @@ async function scraper() {
         })
     }
 
-    await checkFileExists('breakfast.txt');
-
-    await writeLinks('breakfast.txt', JSON.stringify(linksList));
+    // await checkFileExists('breakfast.txt');
+    fs.appendFile('soups.txt', JSON.stringify(linksList), function (err) {
+        if (err) throw err;
+        console.log('Saved!');
+      });
+    // await writeLinks('breakfast.txt', JSON.stringify(linksList));
    
 }
 
