@@ -2,9 +2,9 @@
   "name": "newBot",
   "version": "1.0.0",
   "description": "",
-  "main": "app.ts",
+  "main": "/dist/app.js",
   "scripts": {
-    "start": "npx tsc app.ts && npx ts-node app.ts",
+    "start": "tsc && node dist/app.js",
     "pars": "node src/parsers/linkParser.js"
   },
   "keywords": [],

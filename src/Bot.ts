@@ -11,9 +11,9 @@ export class Bot {
 
   async start() {
     this.bot.start(async (ctx) => {
-      const firstDishes = await readFile('./infoFiles/soups.txt');
-      const secondDishes = await readFile('./infoFiles/secondDish.txt');
-      const salads = await readFile('./infoFiles/salats.txt');
+      const firstDishes = await readFile('./files/soups.txt');
+      const secondDishes = await readFile('./files/secondDish.txt');
+      const salads = await readFile('./files/salats.txt');
 
       ctx.replyWithHTML('Ищу..');
 
