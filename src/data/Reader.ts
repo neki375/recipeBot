@@ -7,6 +7,6 @@ export async function readFile(filePath: string) {
       return data[Math.floor(Math.random()*data.length)];
     }
     catch(err) {
-      console.log(err)
+      console.error(err);
     }
 }
