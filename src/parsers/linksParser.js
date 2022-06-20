@@ -1,16 +1,13 @@
-// const cliProgress = require('cli-progress');
-// const fsPromises = require('fs/promises');
-// const axios = require('axios').default;
 import fsPromises from 'fs/promises';
 import fs from 'fs';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 
-async function scraper() {
+async function scraper(category) {
     const linksList = [];
-    for (let i = 100; i <= 500; i++) {
+    for (let i = 0; i <= 500; i++) {
         console.log(i);
-        await axios.get(`https://eda.ru/recepty/supy?page=${i}`)
+        await axios.get(`https://eda.ru/recepty/${category}?page=${i}`)
         .then(function (response) {
             const $ = cheerio.load(response.data);
             $('.emotion-7ote3x > div').find('.emotion-m0u77r').each((index, e) => {
@@ -32,12 +29,12 @@ async function scraper() {
         })
     }
 
-    // await checkFileExists('breakfast.txt');
-    fs.appendFile('soups.txt', JSON.stringify(linksList), function (err) {
-        if (err) throw err;
-        console.log('Saved!');
-      });
-    // await writeLinks('breakfast.txt', JSON.stringify(linksList));
+    await checkFileExists('breakfast.txt');
+    // fs.appendFile('soups.txt', JSON.stringify(linksList), function (err) {
+    //     if (err) throw err;
+    //     console.log('Saved!');
+    //   });
+    await writeLinks('breakfast.txt', JSON.stringify(linksList));
    
 }
 
@@ -59,6 +56,8 @@ async function checkFileExists(file) {
     }
   }
 
-scraper();
+scraper('supy');
+//osnovnye-blyuda
+//salaty
 
 
