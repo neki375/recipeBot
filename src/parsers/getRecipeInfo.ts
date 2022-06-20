@@ -10,17 +10,6 @@ export interface Iinfo {
     desc: Array<string>;
 }
 
-async function getData(link: string): Promise<any>  {
-    return await needle('get', link)
-    .then((response: any) => {
-        return response.body;
-    })
-    .catch(function(err) {
-        console.error(err);
-    });
-} 
-
-
 export async function getRecipeInfo(link: string, img: string): Promise<Iinfo> {
     console.log(link); 
     const info: Iinfo = {
@@ -43,23 +32,32 @@ export async function getRecipeInfo(link: string, img: string): Promise<Iinfo> {
         info.ings.push(name + '-' + count.replace(/,/g, ''));
     });
 
-    $('.emotion-1ywwzp6').find('.emotion-122mebg').each((_index, element) => {
-        const count = ($(element).find('.emotion-bzb65q').text());
-        const desc = ($(element).find('.emotion-6kiu05').text());
-        info.desc.push(`${count}.` + ' ' + desc.replace(/,/g, ''));
- 
-    });
+    await getDescription($, info, '122mebg');
     
     if (!info.desc.length) {
-        $('.emotion-1ywwzp6').find('.emotion-19fjypw').each((_index, element) => {
-            const count = ($(element).find('.emotion-bzb65q').text());
-            const desc = ($(element).find('.emotion-6kiu05').text());
-            info.desc.push(`${count}.` + ' ' + desc.replace(/,/g, ''));
-     
-        });
+        await getDescription($, info, '19fjypw');
     }
     
     info.desc = info.desc.join(',').replace(/,/g, ';').split(';');
 
     return info;
 }
+
+async function getDescription($: cheerio.CheerioAPI, info: Iinfo, tag: string) {
+    $('.emotion-1ywwzp6').find(`.emotion-${tag}`).each((_index, element) => {
+        const count = ($(element).find('.emotion-bzb65q').text());
+        const desc = ($(element).find('.emotion-6kiu05').text());
+        info.desc.push(`${count}.` + ' ' + desc.replace(/,/g, ''));
+ 
+    });
+}
+
+async function getData(link: string): Promise<any>  {
+    return await needle('get', link)
+    .then((response: any) => {
+        return response.body;
+    })
+    .catch(function(err) {
+        console.error(err);
+    });
+} 
