@@ -31,21 +31,17 @@ export async function getRecipeInfo(link: string, img: string): Promise<Iinfo> {
         desc: []
     };
     const res = await getData(link);
-
     const $ = cheerio.load(res);
-    info.img = img;
 
-    const title = $('.emotion-gl52ge').text();
-    const portions = $('.emotion-1047m5l').text();
+    info.img = img;
+    info.title = $('.emotion-gl52ge').text();;
+    info.portions = $('.emotion-1047m5l').text();;
 
     $('.emotion-13pa6yw').find('.emotion-7yevpr').each((_index, element) => {
         const name = ($(element).find('.emotion-ydhjlb > .emotion-bjn8wh > span').text());
         const count = ($(element).find('.emotion-ydhjlb > .emotion-15im4d2').text());
         info.ings.push(name + '-' + count.replace(/,/g, ''));
     });
-
-    info.title = title;
-    info.portions = portions;
 
     $('.emotion-1ywwzp6').find('.emotion-122mebg').each((_index, element) => {
         const count = ($(element).find('.emotion-bzb65q').text());
@@ -66,5 +62,4 @@ export async function getRecipeInfo(link: string, img: string): Promise<Iinfo> {
     info.desc = info.desc.join(',').replace(/,/g, ';').split(';');
 
     return info;
-
 }

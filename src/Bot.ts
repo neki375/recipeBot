@@ -10,6 +10,7 @@ export class Bot {
   }
 
   async start() {
+    console.log('Start bot');
     this.bot.start(async (ctx) => {
       const firstDishes = await readFile('./files/soups.txt');
       const secondDishes = await readFile('./files/secondDish.txt');
