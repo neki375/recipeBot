@@ -17,11 +17,15 @@ export class Bot {
       const salads = await readFile('./files/salats.txt');
 
       ctx.replyWithHTML('Ищу..');
+
+      const firstDish = await getRecipeInfo(firstDishes.link, firstDishes.img);
+      const secondDish = await getRecipeInfo(secondDishes.link, secondDishes.img);
+      const salat = await getRecipeInfo(salads.link, salads.img);
   
       Promise.all([
-          await this.resipeView(ctx, await getRecipeInfo(firstDishes.link, firstDishes.img)),
-          await this.resipeView(ctx, await getRecipeInfo(secondDishes.link, secondDishes.img)),
-          await this.resipeView(ctx, await getRecipeInfo(salads.link, salads.img))
+          await this.resipeView(ctx, firstDish),
+          await this.resipeView(ctx, secondDish),
+          await this.resipeView(ctx, salat)
       ]);
     });
   
